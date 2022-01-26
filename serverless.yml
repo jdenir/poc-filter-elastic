@@ -1,0 +1,76 @@
+service: crud-users
+
+plugins:
+  - serverless-offline
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  stage: dev
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamoDB:Query
+        - dynamoDB:Scan
+        - dynamoDB:PutItem
+        - dynamoDB:DeleteItem
+        - dynamoDB:GetItem
+        - dynamoDB:UpdateItem
+        - dynamoDB:DeleteItem
+      Resource: arn:aws:dynamodb:us-east-1:044864293932:table/USERS
+
+functions:
+  listarUsers:
+    handler: src/index.get
+    events:
+      - httpApi:
+          path: /users
+          method: get
+
+  getUserById:
+    handler: src/index.getById
+    events:
+      - httpApi:
+          path: /users/{id}
+          method: get
+
+  createUser:
+    handler: src/index.create
+    events:
+      - httpApi:
+          path: /users
+          method: post
+
+  updateUser:
+    handler: src/index.update
+    events:
+      - httpApi:
+          path: /users/{id}
+          method: put
+
+  deleteUser:
+    handler: src/index.delete
+    events:
+      - httpApi:
+          path: /users/{id}
+          method: delete
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: USERS
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

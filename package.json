@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "serverless-offline": "^8.2.0"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1025.0",
+    "elasticsearch": "^15.1.1",
+    "uuid": "^8.3.2"
+  }
+}
